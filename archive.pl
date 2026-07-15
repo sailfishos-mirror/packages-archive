@@ -1,9 +1,10 @@
 /*  Part of SWI-Prolog
 
     Author:        Jan Wielemaker and Matt Lilley
-    E-mail:        J.Wielemaker@cs.vu.nl
-    WWW:           http://www.swi-prolog.org
-    Copyright (c)  2012-2019, VU University Amsterdam
+    E-mail:        jan@swi-prolog.org
+    WWW:           https://www.swi-prolog.org
+    Copyright (c)  2012-2026, VU University Amsterdam
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -48,12 +49,10 @@
             archive_data_stream/3,      % +Archive, -DataStream, +Options
             archive_foldl/4             % :Goal, +Archive, +State0, -State
           ]).
-:- autoload(library(error),
-	    [existence_error/2,domain_error/2,must_be/2]).
-:- autoload(library(filesex),
-	    [directory_file_path/3,make_directory_path/1]).
-:- autoload(library(lists),[member/2]).
-:- autoload(library(option),[option/3,option/2]).
+:- autoload(library(error), [existence_error/2, domain_error/2, must_be/2]).
+:- autoload(library(filesex), [directory_file_path/3, make_directory_path/1]).
+:- autoload(library(lists), [member/2]).
+:- autoload(library(option), [option/3, option/2, merge_options/3]).
 
 :- meta_predicate
     archive_foldl(4, +, +, -).
@@ -198,7 +197,8 @@ archive_open(Stream, Mode, Archive, Options) :-
     archive_open_stream(Stream, Mode, Archive, Options).
 archive_open(File, Mode, Archive, Options) :-
     open(File, Mode, Stream, [type(binary)]),
-    catch(archive_open_stream(Stream, Mode, Archive, [close_parent(true)|Options]),
+    merge_options([close_parent(true)], Options, Options1),
+    catch(archive_open_stream(Stream, Mode, Archive, Options1),
           E, (close(Stream, [force(true)]), throw(E))).
 
 
