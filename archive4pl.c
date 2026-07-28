@@ -1383,7 +1383,8 @@ archive_open_entry(term_t archive, term_t stream)
 
 install_t
 install_archive4pl(void)
-{ MKATOM(filter);
+{ PL_register_blob_type(&archive_blob);
+  MKATOM(filter);
   MKATOM(all);
   MKATOM(bzip2);
   MKATOM(compress);
